@@ -20,6 +20,7 @@ Steps, in order:
 - `ticket-pick`
 - `delegate`
 - `ui-check`
+- `evidence`
 - `watch`
 
 Throughout:
@@ -28,7 +29,7 @@ Throughout:
 - `tracker-move`
 - `handoff`
 
-One run folder per bug, `<tasks>/<KEY>/`, holds the brief, the worker log, `REVIEW-<KEY>.md`, `check-<KEY>.md` and the `UI-<KEY>-*.md` reports, so a run survives a `/clear`.
+One run folder per bug, `<tasks>/<KEY>/`, holds the brief, the worker log, `REVIEW-<KEY>.md`, `check-<KEY>.md`, the `UI-<KEY>-*.md` reports and the `EVIDENCE-<KEY>-<short sha>.md` files, so a run survives a `/clear`.
 
 ## Slots
 
@@ -65,21 +66,21 @@ Then, per bug:
 
 **4. Pick.** `ticket-pick`, then `tracker-move` to In progress.
 
-**5. Fix.** `delegate` the `implement` slot in a fresh worktree from the base branch, test-first, committing at the end. Its brief carries the ticket text, the qualify evidence and fix hint, and the load limits.
+**5. Fix.** `delegate` the `implement` slot in a fresh worktree from the base branch, test-first, committing at the end. Its brief carries the ticket text, the qualify evidence and fix hint, and the load limits, and asks for raw output in the report: the test failing on the base and passing on the head, not "tests pass".
 
 **6. Review.** `delegate` a fresh reviewer that runs `review-change` (the `review` slot) over the new commits, running the guard tests, into `REVIEW-<KEY>.md`. Blocking findings go back to an implementer (step 5) with the report. Cap at three rounds; after that, **Stop and ask**.
 
-**7. Check locally.** Write `check-<KEY>.md` from the ticket's expected vs actual, then `ui-check` local. A fail goes back to step 5 with the report.
+**7. Check locally.** Write `check-<KEY>.md` from the ticket's expected vs actual, then `ui-check` local on the `base` build (red: the bug must show) and on the `head` (green). A head fail goes back to step 5 with the report; a base run that doesn't reproduce gets the check rewritten once, then stands as a gap. Then `evidence` for the head, into `EVIDENCE-<KEY>-<short sha>.md`. A missing test part goes back to step 5, naming the output to bring.
 
-**8. Ship.** Under the charter:
-1. Push and open the MR with the ticket in its description. The MR text goes out under the user's name: show it first, unless the charter grants it for this flow. Under the charter, ticket to In Review; `tracker-move` to In review.
+**8. Ship.** Only with the evidence `proven` for the head being pushed. On `partly proven`, **Stop and ask**: show the gaps, and ship only on the user's OK to them. `not proven` goes back to step 5. Then, under the charter:
+1. Push and open the MR with the ticket in its description and a short **Evidence** section: the evidence file's table. The MR text goes out under the user's name: show it first, unless the charter grants it for this flow. Under the charter, ticket to In Review; `tracker-move` to In review.
 2. `watch` the pipeline for the head SHA until it ends.
 3. Merge only when the pipeline ended `success` for that SHA and `REVIEW-<KEY>.md` passes for the same head. **Stop and ask**, naming the MR and the SHA, unless the charter grants merges for this flow. Merge pinned to that SHA.
 4. Release as the config says, under the charter: a release step that isn't the merge itself (a tag, a manual deploy) is ask-first without a grant. `watch` it until the test environment has the change.
 
-**9. Check on the test environment.** `ui-check` against the test environment URL with the same check file.
+**9. Check on the test environment.** `ui-check` against the test environment URL with the same check file, then `evidence` adds the test-environment part to the head's file.
 
-**10. Close**, under the charter: ticket to Done, `tracker-move` to Released with the version and date, then remove only the worktree and local branch this run created. One line per bug in the handoff. Telling the reporter is a post under the user's name: draft it, then **Stop and ask**.
+**10. Close**, under the charter, only with the test-environment part present in the evidence file: ticket to Done, `tracker-move` to Released with the version and date, then remove only the worktree and local branch this run created. One line per bug in the handoff. Telling the reporter is a post under the user's name: draft it, then **Stop and ask**.
 
 **11. Report.** When the queue is empty, or the user stops it: through `handoff`, per bug its end state (released, waiting with the reason, needs you with the question, for a human), what is still open, and the questions.
 

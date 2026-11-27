@@ -28,7 +28,7 @@ A review is only worth something for the exact code it read. This unit reviews o
    Then, on every review and on top of the slot's answer, apply **Craft** (below) yourself.
 6. **Run the guard tests**, within the load limits. Install nothing: when the worktree lacks dependencies the repo's own setup would bring (and the brief doesn't name how to get them), report the tests as not run.
 7. **Verify each finding** before writing it down: open the line, confirm it is reachable, and drop what does not hold. A finding has a file and line, what goes wrong, and a fix.
-8. **Write the report**: which skill reviewed (or the default), the axes that ran (slot skill, Spec, Standards, Craft), the verdict (`ready`, `changes needed`, `blocked`), the head SHA, the findings ranked blocking first, the guard test results, and the existing threads still open.
+8. **Write the report**: which skill reviewed (or the default), the axes that ran (slot skill, Spec, Standards, Craft), the verdict (`ready`, `changes needed`, `blocked`), the head SHA, the findings ranked blocking first, the guard test results (each command and its raw result lines with counts), and the existing threads still open.
 9. **Remove the worktree** this unit created.
 
 ## Craft
