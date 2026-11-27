@@ -19,7 +19,7 @@ A factory is the easiest way to see what is here:
 | final inspection | `mr-review` |
 | work orders | `delegate`, `ticket-pick` |
 | incoming inspection | `qualify` |
-| quality control | `verify-claim`, `ui-check`, `review-change` |
+| quality control | `verify-claim`, `ui-check`, `review-change`, `evidence` |
 | control panel | `watch` |
 | status board | `tracker-move` |
 | permits and safety rules | `charter` |
@@ -79,7 +79,7 @@ Nothing is merged, pushed or posted under your name unless you said so, in the c
 
 | Flow | Does alone | Asks you first | Never does alone |
 | --- | --- | --- | --- |
-| `/support` | qualify, confirm the cause, pick, fix, review, local browser check | the first bug; the MR text, merge and release unless your charter grants them; after three review rounds; a check that passes locally and fails on the test environment | merge without a green pipeline and a passing review on the same commit; touch others' tickets |
+| `/support` | qualify, confirm the cause, pick, fix, review, local browser check | the first bug; shipping with evidence gaps; the MR text, merge and release unless your charter grants them; after three review rounds; a check that passes locally and fails on the test environment | merge without a green pipeline and a passing review on the same commit; touch others' tickets |
 | `/mr-review` | list the MRs, review each read-only, verify the findings | your call on every MR; each push and merge on yours; each comment on theirs | push to, approve or merge a teammate's MR |
 | `/backlog` | read the backlog, propose what can close, rank the rest | every close or change, by id; value and deadlines it can't infer | close a ticket by age alone; bulk changes |
 | `/night-shift` | worker → verify → review → browser check → MR, and merges you granted that night | one decision round before you leave; comments wait in the handoff | merge without all three gates on the commit, or while the pipeline is pending |
@@ -109,8 +109,8 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | --- | --- | --- |
 | [`/backlog <scope>`](./skills/flows/backlog/SKILL.md) | snapshot-backlog → code-check → prune-backlog → verify-claim → your OK → order-backlog | A cleaner backlog, closed only on checked evidence, and a ranked queue with one reason per ticket. |
 | [`/night-shift`](./skills/flows/night-shift/SKILL.md) | your decisions → charter → watch → each ticket: delegate → verify-claim → merge if granted → handoff | An unattended overnight run through worker, checks, MR and merge, ending in a morning report and a plan for the day. |
-| [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → code-check → your OK → each bug: verify-claim → ticket-pick → delegate (fix, review) → ui-check → watch → merge on your OK or a charter grant → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step. |
-| [`/mr-review <config>`](./skills/flows/mr-review/SKILL.md) | list open MRs → review-change → verify-claim → you validate each MR → yours: fix and push on your word, merge on your word, check on the test environment, close · theirs: comments on your OK | Every open MR reviewed at its current head, and a decision card per MR. Nothing merged or posted without you. |
+| [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → code-check → your OK → each bug: verify-claim → ticket-pick → delegate (fix, review) → ui-check on base and head → evidence → watch → merge on your OK or a charter grant → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step and raw red/green proof per fix. |
+| [`/mr-review <config>`](./skills/flows/mr-review/SKILL.md) | list open MRs → review-change → evidence → verify-claim → you validate each MR → yours: fix and push on your word, merge on your word, check on the test environment, close · theirs: comments on your OK | Every open MR reviewed at its current head, and a decision card per MR. Nothing merged or posted without you. |
 | [`/tune-repo <repo> [areas]`](./skills/flows/tune-repo/SKILL.md) | charter → reap-procs → one worker per area (tests, architecture, deps, bundle, retro) through delegate → verify-claim on the top findings → morning handoff | One ranked report on a repo's tests, architecture, dependencies, bundle and recent agent sessions, audited overnight. Changes no code; you grill it and decide each item. |
 
 ### Bring your own skills
@@ -164,7 +164,8 @@ A pane beside the chat that lists your flows (with their steps) and units, one l
 | [watch](./skills/workflow/watch/SKILL.md) | Watches a pipeline, MR, deploy or package version for one exact revision against a baseline, and reports changes. Never starts work. | Agent picks it up |
 | [qualify](./skills/workflow/qualify/SKILL.md) | Researches each reported bug and labels it ready for an agent, or names the missing question. Never fixes. | Agent picks it up |
 | [ticket-pick](./skills/workflow/ticket-pick/SKILL.md) | Checks a ready ticket is still ready and free, then takes it into work: In Progress, assigned, sprint and points. | Agent picks it up |
-| [ui-check](./skills/workflow/ui-check/SKILL.md) | Checks a change in a controlled browser, locally or on a test environment, after making sure the port and the browser are free. | Agent picks it up |
+| [evidence](./skills/workflow/evidence/SKILL.md) | Assembles the raw proof that a change fixes a bug: the test failing on the base and passing on the head, the bug before and after in the browser, the test environment, and the gaps. Never a summary; never fixes. | Agent picks it up |
+| [ui-check](./skills/workflow/ui-check/SKILL.md) | Checks a change in a controlled browser, locally or on a test environment, on the head or the base build, after making sure the port and the browser are free. | Agent picks it up |
 | [deps-audit](./skills/workflow/deps-audit/SKILL.md) | Lists the dependencies a repo could drop, swap, dedupe or update, each with evidence. Tools only inside a throwaway worktree; changes nothing. | Agent picks it up |
 | [bundle-audit](./skills/workflow/bundle-audit/SKILL.md) | Builds a web app and measures what it ships, tracing each heavy piece to the import that brings it in. Changes nothing. | Agent picks it up |
 | [check-flow](./skills/workflow/check-flow/SKILL.md) | Checks one flow file before it runs: its units exist and can be called, and every push, merge or post has a stop or a charter check. Changes nothing. | Agent picks it up |

@@ -26,7 +26,7 @@ The skill in a slot answers in its own words. The caller turns the answer into t
 ### implement
 
 - **Gets**: the brief (goal, scope, done when, domain rules, permissions, standing forbids), the worktree, the ticket text.
-- **Gives back**: commits on the worktree's branch, and a report: what changed, the tests it added and ran with counts, open questions. Last line `WORKER_EXIT 0`, or `blocked <reason>`.
+- **Gives back**: commits on the worktree's branch, and a report: what changed, the tests it added and ran, open questions. For a fix, the raw output of the test failing on the base and passing on the head, each with its command and commit; "tests pass" alone is not an answer. Last line `WORKER_EXIT 0`, or `blocked <reason>`.
 - **Never**: push, open an MR or PR, merge, comment, write to the tracker, install software. The standing forbids in the brief apply in full.
 - **Default**: a test-first fix: a failing test that shows the bug or the missing behaviour, the smallest change that makes it pass, the scoped tests green.
 
@@ -40,7 +40,7 @@ The skill in a slot answers in its own words. The caller turns the answer into t
 ### browser-check
 
 - **Gets**: the check file (steps and expected results), the URL, the test project and what may be done there, the controlled browser tools.
-- **Gives back**: per step, what was seen and pass or fail, with evidence files.
+- **Gives back**: the commit it ran on, and per step what was seen and pass or fail, with snapshot excerpts, console and network lines, and evidence files.
 - **Never**: use the user's own browser, touch anything outside the test project, print tokens, leave pages open.
 - **Default**: `ui-check`'s own run.
 

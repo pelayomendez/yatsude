@@ -17,7 +17,8 @@ You are a headless worker in <absolute worktree>, on branch <branch> (head <shor
 
 ## Done when
 - <A check you can run yourself, e.g. the scoped test command, stated as command → expected result.>
-- Last action: commit `<type>(<KEY>): <message>`, then a short report (commit hash, what changed with file:line, test counts, open questions) to <run>/report.md, then print a final line `WORKER_EXIT 0`.
+- For a fix: the raw output, not "tests pass": the new or changed test failing on the base <base sha> (for a new test, the test file run against the base's code in a throwaway worktree) and the same test passing on your head, each with its command and commit, trimmed to the lines that show it.
+- Last action: commit `<type>(<KEY>): <message>`, then a short report (commit hash, what changed with file:line, the raw test outputs above with their counts, open questions) to <run>/report.md, then print a final line `WORKER_EXIT 0`.
 
 ## Domain rules (binding)
 <The product and domain rules this work touches, in full. Where the brief is silent on a product question: keep current behaviour as close as possible and flag it in the report. Never invent a behaviour.>
@@ -38,6 +39,7 @@ These are the user's standing permissions that fit this job, read-only. This bri
 
 ## Fill-in notes
 
+- **Raw output over claims**: the report's test section is what the `evidence` unit copies from. A worker that writes "tests pass" without the output has left that part missing.
 - **Verify commands** come from the repo's own scripts (`package.json`, `Makefile`) and the caller's configuration, not from memory.
 - **Dependency changes**: the repo's normal install. The symlink rule is a standing forbid because installing through a symlinked `node_modules` writes into another checkout.
 - **Lifting a standing forbid** (e.g. a worker that opens its own MR) is the caller's explicit decision, backed by a charter line, and named in the brief. Silence never lifts one.

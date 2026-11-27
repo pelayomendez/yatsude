@@ -1,0 +1,3 @@
+interface:
+  display_name: "Evidence"
+  short_description: "Assemble and judge the raw proof that one change fixes one bug: red and green tests, red and green in the browser, the test environment, the gaps"

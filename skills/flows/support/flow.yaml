@@ -1,10 +1,10 @@
 schema: yatsude/flow@1
 name: support
-version: 1.0.0
+version: 1.1.0
 summary: Takes bugs from report to released
 trust: core
 requires:
-  yatsude: '>=0.21'
+  yatsude: '>=0.23'
   config:
   - Tracker
   - Board
@@ -21,6 +21,7 @@ units:
   - ticket-pick
   - delegate
   - ui-check
+  - evidence
   - watch
   throughout:
   - charter
@@ -50,8 +51,14 @@ stops:
   after: delegate
   guards: []
   asks: what to do after three review rounds
+- id: evidence-gaps
+  after: evidence
+  guards:
+  - push
+  - open-mr
+  asks: ship with these evidence gaps
 - id: merge
-  after: ui-check
+  after: evidence
   guards:
   - merge
   - release
